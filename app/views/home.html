@@ -1,0 +1,32 @@
+<div class="row">
+  <!-- One time binding -->
+  <h1>{{ ::home.title }}</h1>
+  <h3>Search for Places in an Area</h3>
+
+  <div>
+    <div class="form-group">
+      <label for="search"></label>
+      <input type="text" class="form-control" id="search" placeholder="Search" ng-model="search">
+    </div>
+    <button type="button" class="btn btn-default" ng-click="getVenues(search)">search {{ search }}</button>
+
+    <!-- ng-show: The $digest loop will run even if the component is not visible -->
+    <h2 ng-if="home.venues">Results</h2>
+    <p ng-if="!home.venues">{{ ::home.exception }}</p>
+    <ul class="list-group">
+      <!-- Avoid using immutable data inside your collection -->
+      <!-- Using track by will force the directive not to recreate the DOM template -->
+      <li class="list-group-item" ng-repeat="venue in home.venues | orderBy:'-hereNow.count' track by $index">
+        <span class="badge">{{ venue.hereNow.count }} here now</span>
+        <h4 class="list-group-item-heading">{{ venue.name }} <small>{{ venue.categories[0].name }}</small> <small><a href="{{ venue.url }}">{{ venue.url }}</a></small></h4>
+        <p class="list-group-item-text">
+          <small>{{ venue.location.address }} {{ venue.location.postalCode }} {{ venue.location.city }}</small>
+        </p>
+        <p class="list-group-item-text">
+          <span class="label label-success">Total Visitors {{ venue.stats.usersCount }}</span>
+          <span class="label label-success">Total Visits {{ venue.stats.checkinsCount }}</span>
+        </p>
+      </li>
+    </ul>
+  </div>
+</div>
